@@ -186,6 +186,9 @@
 			padding: 10px 80px;
 		}
 	}
+	.signup-form {
+		margin: 50px 0;
+	}
 
 	.cases-page,
 	.officers-page {
@@ -207,19 +210,19 @@
 			padding: 20px 0;
 		}
 	}
-	.create-case-form {
+	.create-case-form,
+	.signup-form {
 		margin: 0;
 		padding: 0px;
+		padding-top: 20px;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-	}
-	.subtitle {
-		margin: 40px 20px;
-	}
-	.signup-button {
-		margin-bottom: 20px;
-		align-self: center;
+		.auth-wrap {
+			label {
+				max-width: 250px;
+			}
+		}
 	}
 	.auth-wrap {
 		margin-top: 20px;
@@ -242,6 +245,18 @@
 			margin-bottom: 40px;
 		}
 	}
+	.signup-form {
+		padding: 40px;
+	}
+
+	.subtitle {
+		margin: 40px 20px;
+	}
+	.signup-button {
+		margin-bottom: 20px;
+		align-self: center;
+	}
+
 	.cases-page,
 	.officers-page {
 		.officers-table {

@@ -1,22 +1,44 @@
 @import 'variables';
 .dropdown-wrapper {
 	position: relative;
-}
-.dropdown__item {
-	display: flex;
-	flex-direction: column;
-	background-color: $mainGreenColor;
-	position: absolute;
-	padding: 20px;
-	top: 75px;
-	left: -40px;
-	color: #fff;
-	border-radius: 20px;
-	box-shadow: 0px 5px 15px rgba(227, 184, 115, 0.2);
-	a {
-		text-decoration: none;
+
+	.dropdown__item {
+		display: flex;
+		flex-direction: column;
+		background-color: $mainGreenColor;
+		position: absolute;
+		padding: 20px;
+		top: 75px;
+		left: -40px;
+		color: #fff;
+		border-radius: 20px;
+		box-shadow: 0px 5px 15px rgba(227, 184, 115, 0.2);
+		a {
+			text-decoration: none;
+		}
+		ul {
+			padding: 0;
+			background: #fff;
+			border-radius: 5px;
+		}
+		li {
+			color: $mainBlackColor;
+			width: 246px;
+			background: none;
+			border-radius: 5px;
+			margin: 0;
+			line-height: 21px;
+			padding: 7px;
+			background: #fff;
+			word-break: break-all;
+			list-style-type: none;
+			&:hover {
+				background-color: $mainGrayColor;
+			}
+		}
 	}
 }
+
 .dropdown-button::after {
 	position: absolute;
 	right: 0;
@@ -34,26 +56,6 @@
 .dropdown__item-auth {
 	top: 75px;
 }
-.dropdown__item ul {
-	padding: 0;
-	background: #fff;
-	border-radius: 5px;
-}
-.dropdown__item li {
-	color: $mainBlackColor;
-	width: 246px;
-	background: none;
-	border-radius: 5px;
-	margin: 0;
-	line-height: 21px;
-	padding: 7px;
-	background: #fff;
-	word-break: break-all;
-	list-style-type: none;
-	&:hover {
-		background-color: $mainGrayColor;
-	}
-}
 
 .dropdown__item-corner {
 	width: 20px;
@@ -66,17 +68,21 @@
 }
 
 @media screen and (max-width: 1300px) {
-	.dropdown__item {
-		left: -100px;
+	.dropdown-wrapper {
+		.dropdown__item {
+			left: -100px;
+		}
 	}
 }
 
 @media screen and (max-width: 1000px) {
-	.dropdown__item {
-		left: -227px;
+	.dropdown-wrapper {
+		.dropdown__item {
+			left: -227px;
 
-		&.dropdown__item-auth {
-			left: -210px;
+			&.dropdown__item-auth {
+				left: -210px;
+			}
 		}
 	}
 }
@@ -90,7 +96,7 @@
 
 		.dropdown__item {
 			font-size: 20px;
-			left: -200px;
+			left: -220px;
 			&.dropdown__item-auth {
 				li {
 					width: 250px;
@@ -110,6 +116,13 @@
 		}
 		.dropdown__item-corner {
 			left: 45px;
+		}
+	}
+}
+@media screen and (max-width: 400px) {
+	.dropdown-wrapper {
+		.dropdown__item {
+			left: -190px;
 		}
 	}
 }
