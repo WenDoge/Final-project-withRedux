@@ -3,13 +3,13 @@ import Button from '../../button/button';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { createCase, getOfficers } from '../../../store/actions';
+import createFetch from '../../fetch/fetch';
+import swal from 'sweetalert';
 
 const CreateCase = () => {
 	const auth = useSelector(state => state.authorised);
 	const officers = useSelector(state => state.officers);
-
 	const dispatch = useDispatch();
-
 	const handleCreateCase = async e => {
 		const selectedIndex = e.target[5].selectedIndex;
 		const data = {
@@ -22,26 +22,21 @@ const CreateCase = () => {
 			description: e.target[6].value,
 		};
 		e.preventDefault();
-		await fetch('https://sf-final-project.herokuapp.com/api/cases/', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
-			},
-		})
+		await createFetch('cases', 'POST', true, data)
 			.then(res => {
 				return res.json();
 			})
 			.then(data => {
-				console.log(data);
-				alert('Сообщение отправлено на проверку');
+				swal('Сообщение отправлено на проверку');
 				for (let i = 0; i <= 6; i++) {
 					e.target[i].value = '';
 				}
 				dispatch(createCase(data.data));
 			})
-			.catch(error => console.error(error));
+			.catch(error => {
+				swal('Что-то пошло не так');
+				console.error(error);
+			});
 	};
 
 	const handleCreatePublicCase = async e => {
@@ -55,44 +50,36 @@ const CreateCase = () => {
 			description: e.target[6].value,
 		};
 		e.preventDefault();
-		await fetch('https://sf-final-project.herokuapp.com/api/public/report', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-type': 'application/json',
-			},
-		})
+		await createFetch('public/report', 'POST', false, data)
 			.then(res => {
 				return res.json();
 			})
-			.then(data => {
-				console.log(data);
-				alert('Сообщение отправлено на проверку');
+			.then(() => {
+				swal('Сообщение отправлено на проверку');
 				for (let i = 0; i <= 6; i++) {
 					e.target[i].value = '';
 				}
 			})
-			.catch(error => console.error(error));
+			.catch(error => {
+				swal('Что-то пошло не так');
+				console.error(error);
+			});
 	};
 
 	useEffect(() => {
 		const fetchData = async () => {
-			await fetch('https://sf-final-project.herokuapp.com/api/officers/', {
-				method: 'GET',
-				headers: {
-					'Content-type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				},
-			})
+			await createFetch('officers', 'GET', true)
 				.then(res => res.json())
 				.then(data => {
 					dispatch(getOfficers(data.officers));
-					console.log(data.officers);
 				})
-				.catch(error => console.error(error));
+				.catch(error => {
+					swal('Что-то пошло не так');
+					console.error(error);
+				});
 		};
 		if (localStorage.getItem('token')) fetchData();
-	}, []);
+	}, [dispatch]);
 	return (
 		<article className="create-case-page">
 			<form

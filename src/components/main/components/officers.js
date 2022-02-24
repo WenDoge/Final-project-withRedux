@@ -2,24 +2,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { delOfficer } from '../../../store/actions';
 import ErrorPage from './errorPage';
+import createFetch from '../../fetch/fetch';
+import swal from 'sweetalert';
 
 const OfficersPage = () => {
 	const dispatch = useDispatch();
 	const officers = useSelector(state => state.officers);
 	const handleDeleteOfficer = async id => {
-		await fetch(`https://sf-final-project.herokuapp.com/api/officers/${id}`, {
-			method: 'DELETE',
-			headers: {
-				'Content-type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
-			},
-		})
+		await createFetch(`officers/${id}`, 'DELETE', true)
 			.then(res => res.json())
 			.then(data => {
-				alert('Сотрудник удален из базы данных!');
+				swal('Сотрудник удален из базы данных!');
 				dispatch(delOfficer(id));
 			})
-			.catch(error => console.error(error));
+			.catch(error => {
+				swal('Что-то пошло не так');
+				console.error(error);
+			});
 	};
 
 	return localStorage.getItem('token') ? (

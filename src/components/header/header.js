@@ -6,6 +6,8 @@ import Button from '../button/button';
 import DropDown from '../dropDown/dropDown';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import createFetch from '../fetch/fetch';
+import swal from 'sweetalert';
 
 const Header = () => {
 	const auth = useSelector(state => state.authorised);
@@ -20,13 +22,7 @@ const Header = () => {
 
 	const checkAuth = () => {
 		localStorage.getItem('token') &&
-			fetch('https://sf-final-project.herokuapp.com/api/auth', {
-				method: 'GET',
-				headers: {
-					'Content-type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				},
-			})
+			createFetch('auth', 'GET', true)
 				.then(res => res.json())
 				.then(data => {
 					return data.data.token
@@ -37,7 +33,7 @@ const Header = () => {
 									localStorage.removeItem('token');
 						  };
 				})
-				.catch(e => console.log(e));
+				.catch(e => swal('Что-то пошло нетак', 'error'));
 	};
 
 	const handleLogOut = value => {
@@ -48,7 +44,7 @@ const Header = () => {
 			window.location.reload();
 		}
 	};
-	useEffect(checkAuth, []);
+	useEffect(checkAuth, [dispatch]);
 
 	return (
 		<header className="header">

@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import Button from '../button/button';
 import AuthInput from '../authInput/authInput';
 import { Link } from 'react-router-dom';
+import createFetch from '../fetch/fetch';
+import swal from 'sweetalert';
 
 const DropDown = props => {
 	const [handleToggle, setHandleToggle] = useState(false);
@@ -37,26 +39,27 @@ const DropDown = props => {
 		};
 		e.preventDefault();
 
-		await fetch('https://sf-final-project.herokuapp.com/api/auth/sign_in', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-type': 'application/json',
-			},
-		}).then(res => {
-			return res.json().then(data => {
-				console.log(data);
-				localStorage.setItem('token', `${data.data.token}`);
-				window.location.reload();
+		await createFetch('auth/sign_in', 'POST', false, data)
+			.then(res => {
+				return res.json();
+			})
+			.then(data => {
+				if (data.data) {
+					localStorage.setItem('token', `${data.data.token}`);
+					window.location.reload();
+				} else swal('Неверный логин/пароль');
+			})
+			.catch(error => {
+				console.error(error);
+				swal('Что-то пошло не так');
 			});
-		});
 	};
 	useEffect(() => {
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	});
+	}, [handleToggle]);
 
 	return (
 		<div className="dropdown-wrapper" ref={containerRef}>

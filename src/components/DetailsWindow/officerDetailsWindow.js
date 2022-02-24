@@ -5,7 +5,9 @@ import { editOfficer } from '../../store/actions';
 import { Link } from 'react-router-dom';
 import AuthInput from '../authInput/authInput';
 import Button from '../button/button';
+import createFetch from '../fetch/fetch';
 import './DetailsWindow.scss';
+import swal from 'sweetalert';
 
 const OfficerDetailsWindow = () => {
 	const { officerID } = useParams();
@@ -105,26 +107,19 @@ const OfficerDetailsWindow = () => {
 			fetchData[key] = changedInputs[key];
 		}
 
-		await fetch(
-			`https://sf-final-project.herokuapp.com/api/officers/${officerID}`,
-			{
-				method: 'PUT',
-				body: JSON.stringify(fetchData),
-				headers: {
-					'Content-type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				},
-			}
-		)
+		await createFetch(`officers/${officerID}`, 'PUT', true, fetchData)
 			.then(res => {
 				return res.json();
 			})
-			.then(data => {
-				console.log(data);
-				alert('Изменения сохранены!');
+			.then(async data => {
 				dispatch(editOfficer(officerID, data));
+				await swal('Изменения сохранены!');
+				window.location.reload();
 			})
-			.catch(error => console.error(error));
+			.catch(error => {
+				swal('Что-то пошло не так');
+				console.error(error);
+			});
 	};
 
 	return (

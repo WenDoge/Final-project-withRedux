@@ -3,45 +3,39 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getCases, delCase } from '../../../store/actions';
 import ErrorPage from './errorPage';
+import createFetch from '../../fetch/fetch';
+import swal from 'sweetalert';
 
 const Cases = () => {
 	const dispatch = useDispatch();
 	const cases = useSelector(state => state.cases);
-	const auth = useSelector(state => state.authorised);
 	const handleDeleteCase = async id => {
-		await fetch(`https://sf-final-project.herokuapp.com/api/cases/${id}`, {
-			method: 'DELETE',
-			headers: {
-				'Content-type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
-			},
-		})
+		await createFetch(`cases/${id}`, 'DELETE', true)
 			.then(res => res.json())
-			.then(data => {
-				alert('Случай о краже удален из базы данных!');
+			.then(() => {
+				swal('Случай о краже удален из базы данных!');
 				dispatch(delCase(id));
 			})
-			.catch(error => console.error(error));
+			.catch(error => {
+				swal('Что-то пошло не так');
+				console.error(error);
+			});
 	};
 
 	useEffect(() => {
 		const fetchData = async () => {
-			await fetch('https://sf-final-project.herokuapp.com/api/cases/', {
-				method: 'GET',
-				headers: {
-					'Content-type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				},
-			})
+			await createFetch('cases', 'GET', true)
 				.then(res => res.json())
 				.then(data => {
 					dispatch(getCases(data.data));
-					console.log(data);
 				})
-				.catch(error => console.error(error));
+				.catch(error => {
+					swal('Что-то пошло не так');
+					console.error(error);
+				});
 		};
 		if (localStorage.getItem('token')) fetchData();
-	}, []);
+	}, [dispatch]);
 	return localStorage.getItem('token') ? (
 		<article className="cases-page">
 			<table border="1px" className="table">

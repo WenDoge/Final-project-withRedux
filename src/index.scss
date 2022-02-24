@@ -14,6 +14,16 @@ body {
 	* {
 		box-sizing: border-box;
 	}
+	.swal-footer {
+		text-align: center;
+		.swal-button {
+			padding: 10px 50px;
+			background-color: $mainGreenColor;
+			&:not([disabled]):hover {
+				background-color: $mainGrayColor;
+			}
+		}
+	}
 }
 .wrapper {
 	min-height: 100vh;

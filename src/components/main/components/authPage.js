@@ -1,5 +1,7 @@
 import AuthInput from '../../authInput/authInput';
 import Button from '../../button/button';
+import createFetch from '../../fetch/fetch';
+import swal from 'sweetalert';
 
 const AuthPage = () => {
 	const handleSignup = async e => {
@@ -11,24 +13,16 @@ const AuthPage = () => {
 			lastName: e.target[4].value,
 		};
 
-		console.log(data);
 		e.preventDefault();
-		await fetch('https://sf-final-project.herokuapp.com/api/auth/sign_up', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-type': 'application/json',
-			},
-		})
+		await createFetch('auth/sign_up', 'POST', false, data)
 			.then(res => {
 				return res.json();
 			})
 			.then(data => {
-				alert('Пользователь создан!');
+				swal('Пользователь создан!');
 				for (let i = 0; i <= 4; i++) {
 					e.target[i].value = '';
 				}
-				console.log(data);
 			});
 	};
 
@@ -45,6 +39,7 @@ const AuthPage = () => {
 				/>
 				<AuthInput title="Имя" placeholder="Иван" for="reg4" />
 				<AuthInput title="Фамилия" placeholder="Иванов" for="reg5" />
+
 				<Button
 					title="Подтвердить"
 					className="button signup-button"
